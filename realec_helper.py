@@ -72,12 +72,15 @@ class realecHelper:
 
     def form_document_request(self, path):
         path = self.cut_site_name(path)
-        last_slash = path.rfind['/']
+        last_slash = path.rfind('/')
         collection = path[:last_slash]
         file = path[last_slash:]
-        extension = file.rsplit('.')[1]
+        file, extension = file.rsplit('.')
+        file = file.strip('/')
         collection = self.escape_slashes(collection)
-        return get_file_path.format(collection,file,extension)
+##        print(self.get_file_path.format(collection,file,extension))
+##        raise Exception
+        return self.get_file_path.format(collection,file,extension)
     
     def download_essay(self, path_to_essay, path_to_saved_essay='.', include_ann=True, include_json=True, save=False):
         path_to_essay = path_to_essay.rsplit('.')[0]
@@ -89,14 +92,14 @@ class realecHelper:
                 with open(os.path.join(path_to_saved_essay,essay_name)+'.txt','w',encoding=self.encoding) as t:
                     t.write(self.current_text)
         if include_ann:
-            path_to_ann = self.form_document_request(path_to_essay+'.txt')
+            path_to_ann = self.form_document_request(path_to_essay+'.ann')
             with urllib.request.urlopen(path_to_ann) as f:
                 self.current_ann = f.read().decode(self.encoding)
                 if save:
                     with open(os.path.join(path_to_saved_essay,essay_name)+'.ann','w',encoding=self.encoding) as t:
                         t.write(self.current_ann)
         if include_json:
-            path_to_json = self.form_document_request(path_to_essay+'.txt')
+            path_to_json = self.form_document_request(path_to_essay+'.json')
             with urllib.request.urlopen(path_to_json) as f:
                 self.current_json = f.read().decode(self.encoding)
                 if save:
@@ -113,6 +116,15 @@ def module_test():
     corpus.download_folder(path_to_saved_folder = r'P:\trash')
     corpus.search_text("percentage of UK residents")
 
+def get_essay():
+    r = realecHelper()
+    while True:
+        r.download_essay(input())
+        print(r.current_text)
+        print(r.current_ann)
+        print(r.current_json)
+
 if __name__ == '__main__':
-    simple_search1("percentage of UK residents")
-    module_test()
+##    simple_search1("percentage of UK residents")
+##    module_test()
+    get_essay()
