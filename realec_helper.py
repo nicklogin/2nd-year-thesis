@@ -124,7 +124,3 @@ def get_essay():
         print(r.current_ann)
         print(r.current_json)
 
-if __name__ == '__main__':
-##    simple_search1("percentage of UK residents")
-##    module_test()
-    get_essay()
